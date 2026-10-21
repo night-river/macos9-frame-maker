@@ -56,18 +56,6 @@ export const MIN_VISIBLE = 40;
 /** 제목 최대 길이 (6.2) */
 export const TITLE_MAX = 40;
 
-/** 같은 윈도우로 보는 기준: menu는 메뉴마다 1개, custom은 매번 새로, 나머지는 종류마다 1개 */
-export function windowKey(type: WindowType, params: WindowParams = {}): string {
-    if (type === 'menu') {
-        return `menu:${params.menuKey ?? 'search'}`;
-    }
-    if (WINDOWS[type].multiple) {
-        return `${type}:${crypto.randomUUID()}`;
-    }
-
-    return type;
-}
-
 /** 기본 제목: menu는 메뉴 라벨 */
 export function defaultTitle(type: WindowType, params: WindowParams = {}): string {
     if (type === 'menu') {

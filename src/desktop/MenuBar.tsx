@@ -18,7 +18,7 @@ export function MenuBar() {
 
     return (
         <div className="kw-menubar" role="menubar">
-            {/* TODO(P5): 화면을 PNG로 저장 (8장) */}
+            {/* TODO(P5): 화면을 PNG로 저장 (8장). TODO(P4): homeIcon이 있으면 그 이미지 */}
             <button type="button" className="kw-menubar-item kw-menubar-home" title="화면을 PNG로 저장" aria-label="화면을 PNG로 저장">
                 <img src={HOME_ICON} alt="" />
             </button>
@@ -29,7 +29,7 @@ export function MenuBar() {
                     key={menu.key}
                     role="menuitem"
                     className="kw-menubar-item"
-                    onClick={(e) => useWindowStore.getState().open('menu', { menuKey: menu.key }, { origin: rectOf(e.currentTarget) })}
+                    onClick={(e) => useWindowStore.getState().open('menu', { menuKey: menu.key, origin: rectOf(e.currentTarget) })}
                 >
                     <span className="kw-menu-icon">
                         <Icon fa={menu.icon} />
@@ -38,7 +38,7 @@ export function MenuBar() {
                 </button>
             ))}
 
-            <button type="button" role="menuitem" className="kw-menubar-item" onClick={(e) => useWindowStore.getState().open('custom', {}, { origin: rectOf(e.currentTarget) })}>
+            <button type="button" role="menuitem" className="kw-menubar-item" onClick={(e) => useWindowStore.getState().open('custom', { origin: rectOf(e.currentTarget) })}>
                 <span className="kw-menu-icon">
                     <Icon fa="fa-solid fa-plus" />
                 </span>
@@ -47,7 +47,7 @@ export function MenuBar() {
 
             <span className="kw-menubar-spacer" />
 
-            <button type="button" className="kw-menubar-item" onClick={(e) => useWindowStore.getState().open('control_panel', {}, { origin: rectOf(e.currentTarget) })}>
+            <button type="button" className="kw-menubar-item" onClick={(e) => useWindowStore.getState().open('control_panel', { origin: rectOf(e.currentTarget) })}>
                 <i className="fa-solid fa-sliders" aria-hidden="true" />
                 제어판
             </button>

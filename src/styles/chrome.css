@@ -378,3 +378,22 @@
     box-shadow: 2px 2px 0 var(--kw-drop-shadow);
 }
 
+
+/* 제목 바꾸기 입력란 (frame-maker.md 6.2): 타이틀 바 가운데 제목 자리에 */
+.kw-title-input {
+    width: 180px;
+    max-width: 100%;
+    height: 16px;
+    padding: 0 3px;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg-sub);
+    box-shadow: var(--kw-sunken);
+    font-weight: bold;
+    text-align: center;
+}
+
+.kw-title-input:focus {
+    border-color: var(--kw-point-1);
+    outline: 1px solid var(--kw-point-1);
+    outline-offset: 0;
+}

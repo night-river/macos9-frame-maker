@@ -10,7 +10,7 @@ export function WindowLayer() {
     return (
         <div className="kw-layer-windows">
             {windows.map((win) => (
-                <WindowFrame key={win.key} win={win} active={win.key === active}>
+                <WindowFrame key={win.id} win={win} active={win.id === active}>
                     <WindowContent win={win} />
                 </WindowFrame>
             ))}

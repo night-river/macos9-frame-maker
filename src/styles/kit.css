@@ -1,0 +1,536 @@
+/* 기본 컴포넌트 (kkoriworld docs/frontend.md 4.5). 마우스·누름 상태는 즉시 바뀐다 (transition 없음) */
+
+/* ── 버튼 ── */
+.kw-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 58px;
+    height: 20px;
+    padding: 0 12px;
+    border: 1px solid var(--kw-outline);
+    border-radius: 4px;
+    background: var(--kw-bg);
+    box-shadow: var(--kw-raised);
+    white-space: nowrap;
+    cursor: default;
+}
+
+.kw-btn:active:not(:disabled) {
+    background: var(--kw-shadow);
+    color: var(--kw-light);
+    box-shadow: var(--kw-sunken);
+}
+
+.kw-btn:disabled {
+    color: var(--kw-text-dim);
+}
+
+/* 기본 버튼: 바깥에 굵은 테두리 한 겹 더 */
+.kw-btn.is-default {
+    margin: 3px;
+    box-shadow: var(--kw-raised), 0 0 0 2px var(--kw-bg), 0 0 0 4px var(--kw-outline);
+    border-radius: 4px;
+}
+
+.kw-btn.is-small {
+    min-width: 0;
+    height: 18px;
+    padding: 0 7px;
+}
+
+.kw-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid var(--kw-outline);
+    border-radius: 3px;
+    background: var(--kw-bg);
+    box-shadow: var(--kw-raised);
+    cursor: default;
+    font-size: 11px;
+}
+
+.kw-icon-btn:active:not(:disabled),
+.kw-icon-btn.is-on {
+    background: var(--kw-shadow);
+    color: var(--kw-light);
+    box-shadow: var(--kw-sunken);
+}
+
+.kw-icon-btn:disabled {
+    color: var(--kw-text-dim);
+}
+
+/* ── 입력란 ── */
+.kw-field {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.kw-field-label {
+    font-weight: bold;
+}
+
+.kw-field-error {
+    color: var(--kw-sunday);
+}
+
+.kw-field-hint {
+    color: var(--kw-text-dim);
+}
+
+.kw-input,
+.kw-textarea {
+    width: 100%;
+    min-height: 20px;
+    padding: 2px 4px;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg-sub);
+    box-shadow: var(--kw-sunken);
+}
+
+.kw-textarea {
+    resize: vertical;
+    min-height: 70px;
+    font-family: var(--kw-font-body);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.kw-input:focus,
+.kw-textarea:focus {
+    border-color: var(--kw-point-1);
+    outline: 1px solid var(--kw-point-1);
+    outline-offset: 0;
+}
+
+.kw-input:disabled,
+.kw-textarea:disabled {
+    color: var(--kw-text-dim);
+}
+
+/* ── 체크박스·라디오 ── */
+.kw-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
+}
+
+.kw-check input {
+    appearance: none;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg-sub);
+    box-shadow: var(--kw-raised);
+}
+
+.kw-check input[type="radio"] {
+    border-radius: 50%;
+}
+
+.kw-check input:active {
+    box-shadow: var(--kw-sunken);
+    background: var(--kw-shadow);
+}
+
+.kw-check input[type="checkbox"]:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M6 0h2v2H7v1H6v1H5v1H4v1H3v1H2V6H1V5H0V3h1v1h1v1h1V4h1V3h1V2h1z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.kw-check input[type="radio"]:checked {
+    background-image: radial-gradient(circle, var(--kw-black) 0 2.5px, transparent 3px);
+}
+
+.kw-check input:disabled + span {
+    color: var(--kw-text-dim);
+}
+
+/* ── 팝업 메뉴 (Select) ── */
+.kw-select {
+    appearance: none;
+    height: 20px;
+    min-width: 120px;
+    padding: 0 26px 0 8px;
+    border: 1px solid var(--kw-outline);
+    border-radius: 4px;
+    background-color: var(--kw-bg);
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='10' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1zM0 6h7v1H6v1H5v1H4v1H3V9H2V8H1V7H0z'/%3E%3C/svg%3E"),
+        linear-gradient(var(--kw-shadow), var(--kw-shadow));
+    background-repeat: no-repeat;
+    background-position: right 7px center, right 20px top 3px;
+    background-size: 7px 10px, 1px 12px;
+    box-shadow: var(--kw-raised);
+}
+
+.kw-select:focus {
+    outline: 1px dotted var(--kw-point-1);
+}
+
+/* ── 색 입력 ── */
+.kw-color {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kw-color-swatch {
+    position: relative;
+    width: 22px;
+    height: 18px;
+    border: 1px solid var(--kw-outline);
+    box-shadow: var(--kw-raised);
+    overflow: hidden;
+}
+
+.kw-color-swatch input {
+    position: absolute;
+    inset: -4px;
+    width: 34px;
+    height: 30px;
+    opacity: 0;
+}
+
+.kw-color .kw-input {
+    width: 80px;
+}
+
+/* ── 파일 선택 ── */
+.kw-file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.kw-file-name {
+    color: var(--kw-text-dim);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kw-file-preview {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border: 1px solid var(--kw-shadow);
+    background: var(--kw-bg-sub);
+}
+
+/* ── 진행 바·슬라이더 ── */
+.kw-progress {
+    position: relative;
+    height: 12px;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg-sub);
+    box-shadow: var(--kw-sunken);
+    overflow: hidden;
+}
+
+.kw-progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--kw-point-2), var(--kw-point-1));
+}
+
+.kw-slider {
+    appearance: none;
+    background: transparent;
+    width: 100%;
+    height: 16px;
+    margin: 0;
+}
+
+.kw-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    border: 1px solid var(--kw-outline);
+    background: linear-gradient(to right, var(--kw-point-1) 0 var(--kw-fill, 0%), var(--kw-bg-sub) var(--kw-fill, 0%));
+    box-shadow: var(--kw-sunken);
+}
+
+.kw-slider::-moz-range-track {
+    height: 4px;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg-sub);
+}
+
+.kw-slider::-moz-range-progress {
+    height: 4px;
+    background: var(--kw-point-1);
+}
+
+.kw-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 10px;
+    height: 14px;
+    margin-top: -5px;
+    border: 1px solid var(--kw-outline);
+    background: var(--kw-bg);
+    box-shadow: var(--kw-raised);
+}
+
+.kw-slider::-moz-range-thumb {
+    width: 8px;
+    height: 12px;
+    border: 1px solid var(--kw-outline);
+    border-radius: 0;
+    background: var(--kw-bg);
+}
+
+.kw-slider.is-vertical {
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 16px;
+    height: 90px;
+}
+
+.kw-slider.is-vertical::-webkit-slider-runnable-track {
+    width: 6px;
+    height: auto;
+    background: linear-gradient(to top, var(--kw-point-1) 0 var(--kw-fill, 0%), var(--kw-bg-sub) var(--kw-fill, 0%));
+}
+
+.kw-slider.is-vertical::-webkit-slider-thumb {
+    width: 14px;
+    height: 10px;
+    margin-top: 0;
+    margin-left: -5px;
+}
+
+/* ── 툴팁 (풍선 도움말) ── */
+.kw-tooltip {
+    position: fixed;
+    max-width: 260px;
+    padding: 3px 6px;
+    background: var(--kw-tooltip-bg);
+    color: var(--kw-black);
+    border: 1px solid var(--kw-black);
+    pointer-events: none;
+    white-space: pre-line;
+    z-index: 70;
+}
+
+/* ── 알림창 ── */
+.kw-dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 18vh;
+}
+
+.kw-dialog {
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    display: flex;
+    gap: 14px;
+    padding: 16px 16px 12px;
+    background: var(--kw-bg);
+    border: 1px solid var(--kw-outline);
+    box-shadow: var(--kw-raised), inset 0 0 0 3px var(--kw-bg), inset 0 0 0 4px var(--kw-shadow), 2px 2px 0 var(--kw-drop-shadow);
+}
+
+.kw-dialog-icon {
+    flex: none;
+    width: 32px;
+    font-size: 28px;
+    color: var(--kw-point-1);
+    text-align: center;
+}
+
+.kw-dialog-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.kw-dialog-message {
+    white-space: pre-line;
+    padding-top: 4px;
+}
+
+.kw-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── 툴바 ── */
+.kw-toolbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 26px;
+    padding: 2px 6px;
+    margin: 0 4px 3px;
+    border-bottom: 1px solid var(--kw-shadow);
+    box-shadow: 0 1px 0 var(--kw-light);
+    flex-wrap: wrap;
+}
+
+.kw-toolbar-gap { flex: 1; }
+
+/* ── 빈 상태·로딩 ── */
+.kw-empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    padding: 20px;
+    color: var(--kw-text-dim);
+    text-align: center;
+}
+
+.kw-spinner {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    color: var(--kw-text-dim);
+}
+
+.kw-spinner i {
+    font-size: 18px;
+    animation: kw-watch 1s steps(8) infinite;
+}
+
+@keyframes kw-watch {
+    to { transform: rotate(360deg); }
+}
+
+/* ── 레이아웃 도우미 ── */
+.kw-stack { display: flex; flex-direction: column; gap: 8px; }
+.kw-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.kw-pad { padding: 10px; }
+.kw-dim { color: var(--kw-text-dim); }
+.kw-error { color: var(--kw-sunday); }
+.kw-grow { flex: 1; min-width: 0; }
+
+.kw-group {
+    position: relative;
+    padding: 12px 10px 10px;
+    margin-top: 6px;
+    border: 1px solid var(--kw-shadow);
+    box-shadow: 1px 1px 0 var(--kw-light), inset 1px 1px 0 var(--kw-light);
+}
+
+.kw-group-title {
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    padding: 0 4px;
+    background: var(--kw-bg);
+}
+
+.kw-panel-bg .kw-group-title {
+    background: var(--kw-bg);
+}
+
+.kw-sep {
+    height: 0;
+    margin: 6px 0;
+    border-top: 1px solid var(--kw-shadow);
+    border-bottom: 1px solid var(--kw-light);
+}
+
+/* 개발용 키트 화면 */
+.kw-kit {
+    position: fixed;
+    inset: 0;
+    overflow: auto;
+    padding: 20px;
+    background: var(--kw-bg);
+}
+
+.kw-kit > h2 {
+    margin: 18px 0 8px;
+    font-size: 12px;
+}
+
+/* ════════════════════════════════════════════════════════════
+ * 화면별 (docs/frame-maker.md 4.2, 7장)
+ * ════════════════════════════════════════════════════════════ */
+
+/* ── 스티커 목록 (9장) ── */
+.kw-sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 6px;
+}
+
+.kw-sticker-cell {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--kw-shadow);
+    background: var(--kw-bg);
+}
+
+.kw-sticker-cell > button:first-child {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    cursor: default;
+}
+
+.kw-sticker-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.kw-sticker-delete {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    visibility: hidden;
+}
+
+.kw-sticker-cell:hover .kw-sticker-delete,
+.kw-sticker-cell:focus-within .kw-sticker-delete {
+    visibility: visible;
+}
+
+/* 편집 모달: 화면 전체(메뉴 바 포함)를 덮는 오버레이 위 가운데 (kkoriworld 회원가입 모달과 같은 모양) */
+.kw-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: var(--kw-overlay);
+}
+
+.kw-window.kw-modal {
+    position: relative;
+    width: 360px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.kw-window.kw-modal .kw-titlebar {
+    cursor: default;
+}

@@ -1,0 +1,34 @@
+/*
+ * 테마 변수와 파생 색 (kkoriworld docs/frontend.md 4.2)
+ * --kw-bg, --kw-bg-sub, --kw-text, --kw-point-1, --kw-point-2, --kw-on-point-1, --kw-on-point-2, --kw-text-outline은
+ * 프로젝트의 theme으로 utils/theme.ts가 :root에 넣는다 (기본값은 utils/theme.ts의 DEFAULT_THEME, frame-maker.md 3.1).
+ */
+:root {
+    /* 파생 색 */
+    --kw-light: color-mix(in srgb, var(--kw-bg) 25%, white);
+    --kw-shadow: color-mix(in srgb, var(--kw-bg) 60%, black);
+    --kw-outline: color-mix(in srgb, var(--kw-bg) 25%, black);
+    --kw-stripe: color-mix(in srgb, var(--kw-point-1) 45%, var(--kw-bg));
+    --kw-text-dim: color-mix(in srgb, var(--kw-text) 45%, var(--kw-bg));
+
+    /* 입체 테두리 (블러 없는 1px 안쪽 그림자) */
+    --kw-raised: inset 1px 1px 0 var(--kw-light), inset -1px -1px 0 var(--kw-shadow);
+    --kw-sunken: inset 1px 1px 0 var(--kw-shadow), inset -1px -1px 0 var(--kw-light);
+
+    /* 폰트 (4.3). Galmuri11은 이 프로젝트 안에 포함 (base.css) */
+    --kw-font-ui: "Galmuri11", sans-serif;
+    --kw-font-body: "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+
+    /* 크기 */
+    --kw-menubar-h: 20px;
+    --kw-title-h: 20px;
+    --kw-tray-h: 22px;
+
+    /* 테마와 무관한 고정 색 (frontend.md 0장 3번의 예외) */
+    --kw-black: #000000;
+    --kw-white: #FFFFFF;
+    --kw-overlay: rgba(0, 0, 0, 0.6);
+    --kw-drop-shadow: rgba(0, 0, 0, 0.35);
+    --kw-sunday: #CC0000; /* 입력란 오류 글자 */
+    --kw-tooltip-bg: #FFFFCC;
+}

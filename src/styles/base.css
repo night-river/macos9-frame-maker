@@ -1,0 +1,162 @@
+/* 리셋, 폰트, 스크롤바, 선택 색 (kkoriworld docs/frontend.md 4.3, 4.4) */
+
+/*
+ * 기본 UI 폰트 Galmuri11 (OFL, npm galmuri). 패키지의 galmuri.css는 모든 크기의 폰트를 선언하므로 쓰는 것만 직접 선언
+ * Vite가 woff2를 빌드 결과에 포함하므로 같은 출처에서 불러온다 (PNG 저장 시 폰트가 빠지지 않게, frame-maker.md 1장)
+ */
+@font-face {
+    font-family: "Galmuri11";
+    src: url("../../node_modules/galmuri/dist/Galmuri11.woff2") format("woff2");
+    font-weight: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Galmuri11";
+    src: url("../../node_modules/galmuri/dist/Galmuri11-Bold.woff2") format("woff2");
+    font-weight: bold;
+    font-display: swap;
+}
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    overflow: hidden;
+    background: var(--kw-bg);
+    color: var(--kw-text, var(--kw-black));
+    font-family: var(--kw-font-ui);
+    font-size: 12px;
+    line-height: 1.4;
+    cursor: default;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    color: inherit;
+}
+
+img {
+    -webkit-user-drag: none;
+}
+
+h1, h2, h3, h4, p, ul, ol {
+    margin: 0;
+}
+
+::selection {
+    background: var(--kw-point-2);
+    color: var(--kw-on-point-2);
+}
+
+/* 키보드 포커스 (11.4) */
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 1px dotted var(--kw-point-1);
+    outline-offset: 1px;
+}
+
+.kw-pixel {
+    image-rendering: pixelated;
+}
+
+.kw-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+/* ── 스크롤바: Windows 98처럼 입체 손잡이 + 위·아래 화살표 (4.4) ── */
+* {
+    scrollbar-color: var(--kw-point-1) var(--kw-bg);
+}
+
+@supports selector(::-webkit-scrollbar) {
+    * {
+        scrollbar-color: auto;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--kw-bg);
+    background-image:
+        linear-gradient(45deg, var(--kw-light) 25%, transparent 25%, transparent 75%, var(--kw-light) 75%),
+        linear-gradient(45deg, var(--kw-light) 25%, transparent 25%, transparent 75%, var(--kw-light) 75%);
+    background-size: 2px 2px;
+    background-position: 0 0, 1px 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--kw-point-1);
+    border: 1px solid var(--kw-outline);
+    box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--kw-point-1) 40%, white), inset -1px -1px 0 color-mix(in srgb, var(--kw-point-1) 60%, black);
+}
+
+::-webkit-scrollbar-button:single-button {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-color: var(--kw-bg);
+    border: 1px solid var(--kw-outline);
+    box-shadow: var(--kw-raised);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+::-webkit-scrollbar-button:single-button:active {
+    box-shadow: var(--kw-sunken);
+}
+
+::-webkit-scrollbar-button:single-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar-button:single-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h7v1H6v1H5v1H4v1H3V3H2V2H1V1H0z'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar-button:single-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h1v7H3V6H2V5H1V4H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar-button:single-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z'/%3E%3C/svg%3E");
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--kw-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+    }
+}

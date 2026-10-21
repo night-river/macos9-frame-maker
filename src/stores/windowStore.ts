@@ -55,6 +55,8 @@ interface WindowState {
     setBounds: (id: string, bounds: Bounds) => void;
     /** 제목 바꾸기: 앞뒤 공백 제거, 최대 40자, 비우면 기본 제목 */
     rename: (id: string, title: string) => void;
+    /** 윈도우 이미지 넣기·바꾸기·지우기 (6.3) */
+    setImage: (id: string, image: ImageRef | null) => void;
     setHiddenForStickers: (hidden: boolean) => void;
 }
 
@@ -251,6 +253,8 @@ export const useWindowStore = create<WindowState>()((set, get) => {
             const trimmed = title.trim().slice(0, TITLE_MAX);
             update(id, (w) => ({ title: trimmed || defaultTitle(w.type, { menuKey: w.menuKey }) }));
         },
+
+        setImage: (id, image) => update(id, () => ({ image })),
 
         setHiddenForStickers: (hidden) => set({ hiddenForStickers: hidden }),
     };

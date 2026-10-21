@@ -1,8 +1,9 @@
-import { get as idbGet, set as idbSet } from 'idb-keyval';
 import { useProjectStore } from '@/stores/projectStore';
 import { showAlert } from '@/stores/uiStore';
 import { toFrameWindows, useWindowStore } from '@/stores/windowStore';
 import { applyTheme } from '@/utils/theme';
+import { collectGarbage, referencedBlobIds } from './blobs';
+import { idbStorage, setStorage, type ProjectStorage } from './storage';
 import { emptyProject, type Project } from './types';
 import { parseProject } from './validate';
 
@@ -12,13 +13,7 @@ export const PROJECT_KEY = 'project';
 export const SAVE_DELAY = 500;
 export const QUOTA_MESSAGE = '브라우저 저장 공간이 부족합니다. 사용하지 않는 이미지를 지워주세요.';
 
-/** 저장소 (테스트에서는 메모리로 바꿔 끼운다) */
-export interface ProjectStorage {
-    get: (key: string) => Promise<unknown>;
-    set: (key: string, value: unknown) => Promise<void>;
-}
-
-export const idbStorage: ProjectStorage = { get: (key) => idbGet(key), set: (key, value) => idbSet(key, value) };
+export { idbStorage, type ProjectStorage };
 
 /** 없거나 형식이 맞지 않거나 읽기에 실패하면 빈 프로젝트 */
 export async function loadProject(storage: ProjectStorage): Promise<Project> {
@@ -81,10 +76,12 @@ let started: Promise<() => void> | null = null;
 /**
  * 처음 한 번: 불러오기 → 상태에 넣기 → 테마 적용 → 이후 변경을 자동 저장
  * 내용이 지난번 저장과 같으면 쓰지 않는다 (줌 사각형·화면 크기 변경 등은 저장할 내용이 아님)
+ * 저장한 뒤 어디서도 쓰지 않는 이미지(blob)를 지운다. 저장한 내용과 지금 화면 상태가 쓰는 것은 남긴다
  * 돌려주는 함수는 구독 해제 (테스트용)
  */
 export function startPersistence(storage: ProjectStorage = idbStorage): Promise<() => void> {
     started ??= (async () => {
+        setStorage(storage);
         const project = await loadProject(storage);
         const { windows, ...meta } = project;
         useWindowStore.getState().hydrate(windows);
@@ -101,6 +98,9 @@ export function startPersistence(storage: ProjectStorage = idbStorage): Promise<
             storage.set(PROJECT_KEY, next).then(
                 () => {
                     lastSaved = json;
+                    const keep = referencedBlobIds(next);
+                    referencedBlobIds(currentProject()).forEach((id) => keep.add(id));
+                    collectGarbage(keep, storage).catch((error: unknown) => console.error('사용하지 않는 이미지를 지우지 못했습니다.', error));
                 },
                 (error: unknown) => {
                     console.error('프로젝트를 저장하지 못했습니다.', error);

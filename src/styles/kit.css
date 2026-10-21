@@ -534,3 +534,39 @@
 .kw-window.kw-modal .kw-titlebar {
     cursor: default;
 }
+
+/* ── 이미지 편집 화면 (4.2) ── */
+.kw-window.kw-image-editor {
+    width: auto;
+}
+
+.kw-image-editor-body {
+    flex: none;
+    align-items: center;
+}
+
+.kw-image-editor-preview {
+    position: relative;
+    overflow: hidden;
+    cursor: move;
+    touch-action: none;
+}
+
+.kw-image-editor-controls {
+    flex-wrap: nowrap;
+    padding: 4px 8px 0;
+}
+
+.kw-image-editor-controls .kw-slider {
+    width: 100%;
+}
+
+.kw-image-editor-percent {
+    min-width: 36px;
+    text-align: right;
+}
+
+.kw-image-editor-actions {
+    justify-content: flex-end;
+    padding: 8px;
+}

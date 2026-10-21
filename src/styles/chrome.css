@@ -397,3 +397,60 @@
     outline: 1px solid var(--kw-point-1);
     outline-offset: 0;
 }
+
+/* ── 이미지 프레임 (frame-maker.md 4.1, 5.2, 6.3) ── */
+/* 배경: 데스크톱 영역(메뉴 바 아래)이 프레임. 이미지가 없으면 .kw-desktop의 --kw-bg가 보인다 */
+.kw-layer-wallpaper {
+    position: absolute;
+    inset: var(--kw-menubar-h) 0 0 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* 4.1 맞춤 계산 결과 위치에 놓는 이미지 */
+.kw-fit-img {
+    position: absolute;
+    max-width: none;
+    max-height: none;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* 윈도우 콘텐츠 영역 전체 */
+.kw-image-frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    cursor: default;
+}
+
+/* 들어간 면의 안쪽 그림자를 이미지 위에 다시 그린다 */
+.kw-image-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 1px 1px 0 var(--kw-outline);
+    pointer-events: none;
+}
+
+.kw-image-frame:focus-visible {
+    outline: 1px solid var(--kw-point-1);
+    outline-offset: -2px;
+}
+
+.kw-image-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px;
+    color: var(--kw-text-dim);
+    text-align: center;
+}
+
+.kw-image-empty i {
+    font-size: 24px;
+}

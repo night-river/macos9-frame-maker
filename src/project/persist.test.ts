@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useProjectStore } from '@/stores/projectStore';
 import { useUiStore } from '@/stores/uiStore';
 import { useWindowStore } from '@/stores/windowStore';
+import { blobKey, resetBlobsForTest, storeBlob } from './blobs';
 import { PROJECT_KEY, QUOTA_MESSAGE, createDebounced, loadProject, resetPersistenceForTest, startPersistence, type ProjectStorage } from './persist';
 import { emptyProject, type Project } from './types';
 
@@ -12,8 +13,14 @@ function memoryStorage(initial?: unknown) {
         writes: 0,
         get: async (key) => data.get(key),
         set: async (key, value) => {
-            storage.writes += 1;
-            data.set(key, structuredClone(value));
+            if (key === PROJECT_KEY) {
+                storage.writes += 1;
+            }
+            data.set(key, value instanceof Blob ? value : structuredClone(value));
+        },
+        keys: async () => [...data.keys()],
+        del: async (key) => {
+            data.delete(key);
         },
     };
 
@@ -27,6 +34,7 @@ let stop: (() => void) | null = null;
 beforeEach(() => {
     vi.useFakeTimers();
     resetPersistenceForTest();
+    resetBlobsForTest();
     useWindowStore.setState({ windows: [], topZ: 0, hiddenForStickers: false, viewport: { width: 1000, height: 500 } });
     useProjectStore.setState({ loaded: false });
     useUiStore.setState({ dialogs: [] });
@@ -42,7 +50,7 @@ describe('불러오기 (3.2)', () => {
     it('없거나 손상되었으면 빈 프로젝트, 읽기 실패도 빈 프로젝트', async () => {
         expect(await loadProject(memoryStorage())).toEqual(emptyProject());
         expect(await loadProject(memoryStorage({ broken: true }))).toEqual(emptyProject());
-        const failing: ProjectStorage = { get: () => Promise.reject(new Error('읽기 실패')), set: async () => undefined };
+        const failing: ProjectStorage = { get: () => Promise.reject(new Error('읽기 실패')), set: async () => undefined, keys: async () => [], del: async () => undefined };
         vi.spyOn(console, 'error').mockImplementation(() => undefined);
         expect(await loadProject(failing)).toEqual(emptyProject());
     });
@@ -102,6 +110,59 @@ describe('자동 저장 (3.2)', () => {
         useWindowStore.getState().open('custom', { animate: false });
         await vi.advanceTimersByTimeAsync(500);
         expect(useUiStore.getState().dialogs.map((d) => d.message)).toEqual([QUOTA_MESSAGE]);
+    });
+});
+
+describe('사용하지 않는 이미지 정리 (3.2)', () => {
+    const image = (blobId: string) => ({ blobId, naturalWidth: 10, naturalHeight: 10, focusX: 0.5, focusY: 0.5, zoom: 1 });
+
+    it('저장할 때 어디서도 쓰지 않는 blob:*만 지운다', async () => {
+        const project: Project = {
+            ...emptyProject(),
+            wallpaper: image('wall'),
+            homeIcon: image('home'),
+            windows: [{ ...savedWindow, image: image('win') }],
+            stickerLibrary: [{ id: 's1', blobId: 'sticker', naturalWidth: 10, naturalHeight: 10 }],
+        };
+        const storage = memoryStorage(project);
+        for (const id of ['wall', 'home', 'win', 'sticker', 'old']) {
+            storage.data.set(blobKey(id), new Blob([id]));
+        }
+        storage.data.set('other', 1);
+        stop = await startPersistence(storage);
+
+        useWindowStore.getState().setImage('w1', null);
+        await vi.advanceTimersByTimeAsync(500);
+
+        expect([...storage.data.keys()].sort()).toEqual(['blob:home', 'blob:sticker', 'blob:wall', 'other', PROJECT_KEY].sort());
+    });
+
+    it('저장 중인 이미지는 프로젝트에 들어가기 전이라도 지우지 않는다', async () => {
+        const storage = memoryStorage();
+        stop = await startPersistence(storage);
+        const finish = await storeBlob('new', new Blob(['x']), storage);
+        useProjectStore.getState().setWallpaper(null);
+        useWindowStore.getState().open('custom', { animate: false });
+        await vi.advanceTimersByTimeAsync(500);
+        expect(storage.data.has(blobKey('new'))).toBe(true);
+
+        // 넣지 않고 끝나면 다음 저장 때 지운다
+        finish();
+        useWindowStore.getState().open('custom', { animate: false });
+        await vi.advanceTimersByTimeAsync(500);
+        expect(storage.data.has(blobKey('new'))).toBe(false);
+    });
+
+    it('배경 이미지를 넣으면 저장되고 다시 불러와도 유지', async () => {
+        const storage = memoryStorage();
+        stop = await startPersistence(storage);
+        const finish = await storeBlob('wall', new Blob(['x']), storage);
+        useProjectStore.getState().setWallpaper({ ...image('wall'), focusX: 0.2, zoom: 2 });
+        finish();
+        await vi.advanceTimersByTimeAsync(500);
+
+        expect((await loadProject(storage)).wallpaper).toEqual({ ...image('wall'), focusX: 0.2, zoom: 2 });
+        expect(storage.data.get(blobKey('wall'))).toBeInstanceOf(Blob);
     });
 });
 
